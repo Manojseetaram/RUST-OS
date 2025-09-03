@@ -5,16 +5,15 @@ edition = "2018"
 
 
 [dependencies]
-bootloader = "=0.9.32"
+bootloader = "0.9.32"
 
 lazy_static = { version = "1.5.0", features = ["spin_no_std"] }
 spin = "0.5.2"
 volatile = "=0.2.6"
+x86_64 = "0.14.2"
+
+[package.metadata.bootimage]
+test-args = ["-device", "isa-debug-exit,iobase=0xf4,iosize=0x04"]
 
 
-[profile.dev]
-panic = "abort"
-
-[profile.release]
-panic = "abort"
 
