@@ -141,7 +141,7 @@ impl Write for Writer {
 // VGA Buffer 
  #[macro_export]
  macro_rules! print {
-     ($($arg:tt)*) => ($crate::vga_buffer::print(format_args!($($arg)*)));
+     ($($arg:tt)*) => ($crate::vga_buffer::_print(format_args!($($arg)*)));
  }
 
  #[macro_export]
