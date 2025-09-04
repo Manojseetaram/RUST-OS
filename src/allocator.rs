@@ -4,7 +4,7 @@ use core::ptr::null_mut;
 use linked_list::LinkedListAllocator;
 pub mod bump;
 pub mod linked_list;
-
+pub mod fixed_size_block;
 // #[cfg(feature = "use_dummy")]
 // #[global_allocator]
 
