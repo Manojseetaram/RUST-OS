@@ -36,7 +36,7 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
   use blog_os::allocator;
     use blog_os::memory::{self, BootInfoFrameAllocator};
 
-    println!("Hello World{}", "!");
+    println!("Rust is not a Cult{}", "!");
     blog_os::init();
 
     let phys_mem_offset = VirtAddr::new(boot_info.physical_memory_offset);
@@ -80,4 +80,3 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
   
        
 }
-
