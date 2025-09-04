@@ -12,7 +12,15 @@ use blog_os::println;
 pub extern "C" fn _start() -> ! {
     println!("Rust is  Not a cult{}", "!");
    blog_os::init();
-   x86_64::instructions::interrupts::int3();
+//    x86_64::instructions::interrupts::int3();
+//trigger page fault
+// unsafe {
+//    *(0xdeadbeef as *mut u64) = 42;
+// }
+fn stack_overflow(){
+    stack_overflow();   
+}
+stack_overflow();
     #[cfg(test)]
     test_main();
 println!("It did not crash");
