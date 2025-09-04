@@ -45,7 +45,7 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
   let mut frame_allocater = memory::EmptyFrameAllocator;
    
 //mapo unused page 
-let page = Page::containing_address(VirtAddr::new(0));
+let page = Page::containing_address(VirtAddr::new(0xdeadbeaf000));
 memory::create_example_mapping(page,&mut  mapper,&mut frame_allocater);
 
 //writing the string New! to the screen throught the new mapping
