@@ -6,9 +6,12 @@
 #![reexport_test_harness_main = "test_main"]
 
 use core::panic::PanicInfo;
-use blog_os::{memory, println};
+use blog_os::{ println};
 use bootloader::{BootInfo, entry_point};
+extern crate alloc;
 
+use alloc::boxed::Box;
+use x86_64::VirtAddr;
 
 entry_point!(kernel_main);
 pub trait Testable {
@@ -30,24 +33,30 @@ fn panic(info: &PanicInfo) -> ! {
 }
 #[unsafe(no_mangle)]
 fn kernel_main(boot_info: &'static BootInfo) -> ! {
-    use blog_os::memory::BootInfoFrameAllocator;
-    use x86_64::VirtAddr;
-      
-    println!("Rust is  Not a cult{}", "!");
+  use blog_os::allocator;
+    use blog_os::memory::{self, BootInfoFrameAllocator};
+
+    println!("Hello World{}", "!");
     blog_os::init();
 
-
-
     let phys_mem_offset = VirtAddr::new(boot_info.physical_memory_offset);
-    let mut _mapper = unsafe { memory::init(phys_mem_offset) };
-    let mut _frame_allocator = unsafe {  BootInfoFrameAllocator::init(&boot_info.memory_map)
+    let mut mapper = unsafe { memory::init(phys_mem_offset) };
+    let mut frame_allocator = unsafe {
+        BootInfoFrameAllocator::init(&boot_info.memory_map)
     };
-   
 
+    // new
+    allocator::init_heap(&mut mapper, &mut frame_allocator)
+        .expect("heap initialization failed");
 
+    let x = Box::new(41);
+
+ 
+
+  
      #[cfg(test)]
     test_main();
-    println!("It did not crash!");
+    println!("It did not crash {x}!");
     
     blog_os::hlt_loop()
 //mapo unused page 
