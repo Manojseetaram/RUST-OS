@@ -5,7 +5,7 @@
 #![test_runner(crate::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 #![feature(abi_x86_interrupt)] 
-
+extern crate alloc;
 use core::panic::PanicInfo;
 pub trait Testable {
     fn run(&self) -> ();
@@ -15,6 +15,7 @@ pub mod interrupts;
 pub mod serial;
 pub mod gdt;
 pub mod memory;
+pub mod allocator;
 
 impl<T> Testable for T
 where
