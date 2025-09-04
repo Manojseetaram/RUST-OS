@@ -46,15 +46,15 @@ pub fn test_panic_handler(info: &PanicInfo) -> ! {
 }
 
 /// Entry point for `cargo test`
-#[cfg(test)]
-#[unsafe(no_mangle)]
-pub extern "C" fn _start() -> ! {
-    init();
-    test_main();
-    hlt_loop();
-    // #[allow(clippy::empty_loop)]
-    // loop {}
-}
+// #[cfg(test)]
+// #[unsafe(no_mangle)]
+// pub extern "C" fn _start() -> ! {
+//     init();
+//     test_main();
+//     hlt_loop();
+//     // #[allow(clippy::empty_loop)]
+//     // loop {}
+// }
 // pub fn init() {
 //     gdt::init();
 //     interrupts::init_idt();
@@ -70,18 +70,7 @@ pub fn init() {
     unsafe { interrupts::PICS.lock().initialize() };
     x86_64::instructions::interrupts::enable();     // new
 }
-#[cfg(test)]
-use bootloader::{entry_point, BootInfo};
 
-#[cfg(test)]
-entry_point!(test_kernel_main);
-#[cfg(test)]
-fn test_kernel_main(_boot_info: &'static BootInfo) -> ! {
-    // like before
-    init();
-    test_main();
-    hlt_loop();
-}
 #[cfg(test)]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
@@ -115,4 +104,18 @@ pub fn hlt_loop() -> ! {
 #[alloc_error_handler]
 fn alloc_error_handler(layout : alloc::alloc::Layout)-> !{
     panic!("allocation error : {:?}" , layout)
+}
+#[cfg(test)]
+use bootloader::{entry_point, BootInfo};
+
+#[cfg(test)]
+entry_point!(test_kernel_main);
+
+
+#[cfg(test)]
+fn test_kernel_main(_boot_info: &'static BootInfo) -> ! {
+    // like before
+    init();
+    test_main();
+    hlt_loop();
 }
