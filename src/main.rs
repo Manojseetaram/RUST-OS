@@ -24,12 +24,22 @@ fn panic(info: &PanicInfo) -> ! {
 fn panic(info: &PanicInfo) -> ! {
     blog_os::test_panic_handler(info)
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn _start() -> ! {
     println!("Rust is  Not a cult{}", "!");
    blog_os::init();
 
-   
+//       let ptr = 0x2044fc as *mut u8;
+//       unsafe { let x = *ptr; }
+//      println!("read worked");
+
+//   unsafe { *ptr = 42; }
+// println!("write worked");
+
+    use x86_64::registers::control::Cr3;
+
+    let (level_4_page_table, _) = Cr3::read();
+    println!("Level 4 page table at: {:?}", level_4_page_table.start_address());
 //    x86_64::instructions::interrupts::int3();
 //trigger page fault
 // unsafe {
