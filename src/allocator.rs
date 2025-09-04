@@ -1,12 +1,17 @@
 use alloc::alloc::{GlobalAlloc, Layout};
 use core::ptr::null_mut;
-use bump::BumpAllocator;
+// use bump::BumpAllocator;
+use linked_list::LinkedListAllocator;
 pub mod bump;
 pub mod linked_list;
-// #[cfg(feature = "use_dummy")]
-#[global_allocator]
 
-static ALLOCATOR: Locked<BumpAllocator> = Locked::new(BumpAllocator::new());
+// #[cfg(feature = "use_dummy")]
+// #[global_allocator]
+
+// static ALLOCATOR: Locked<BumpAllocator> = Locked::new(BumpAllocator::new());
+#[global_allocator]
+static ALLOCATOR: Locked<LinkedListAllocator> =
+    Locked::new(LinkedListAllocator::new());
 
 use x86_64::{
     structures::paging::{
