@@ -2,6 +2,7 @@ use alloc::alloc::{GlobalAlloc, Layout};
 use core::ptr::null_mut;
 use bump::BumpAllocator;
 pub mod bump;
+pub mod linked_list;
 // #[cfg(feature = "use_dummy")]
 #[global_allocator]
 
