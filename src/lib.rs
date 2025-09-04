@@ -7,19 +7,14 @@
 #![feature(abi_x86_interrupt)] 
 
 use core::panic::PanicInfo;
-
+pub trait Testable {
+    fn run(&self) -> ();
+}
 pub mod vga_buffer;
 pub mod interrupts;
 pub mod serial;
 pub mod gdt;
-pub trait Testable {
-    fn run(&self) -> ();
-}
-pub fn hlt_loop() -> ! {
-    loop {
-        x86_64::instructions::hlt();
-    }
-}
+
 
 impl<T> Testable for T
 where
@@ -94,4 +89,10 @@ pub fn exit_qemu(exit_code: QemuExitCode) {
         port.write(exit_code as u32);
     }
 }
+pub fn hlt_loop() -> ! {
+    loop {
+        x86_64::instructions::hlt();
+    }
+}
+
 

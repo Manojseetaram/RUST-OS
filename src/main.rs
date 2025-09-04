@@ -7,31 +7,8 @@
 
 use core::panic::PanicInfo;
 use blog_os::println;
-
-#[unsafe(no_mangle)]
-pub extern "C" fn _start() -> ! {
-    println!("Rust is  Not a cult{}", "!");
-   blog_os::init();
-   blog_os::hlt_loop();  
-    println!("It did not crash!");
-//    x86_64::instructions::interrupts::int3();
-//trigger page fault
-// unsafe {
-//    *(0xdeadbeef as *mut u64) = 42;
-// }
-// fn stack_overflow(){
-//     stack_overflow();   
-// }
-// stack_overflow();
-    #[cfg(test)]
-    test_main();
- 
-    
-    loop {
-        use blog_os::print;
-        print!("-");        
-    }
-       
+pub trait Testable {
+    fn run(&self);
 }
 
 /// This function is called on panic.
@@ -47,3 +24,26 @@ fn panic(info: &PanicInfo) -> ! {
 fn panic(info: &PanicInfo) -> ! {
     blog_os::test_panic_handler(info)
 }
+#[no_mangle]
+pub extern "C" fn _start() -> ! {
+    println!("Rust is  Not a cult{}", "!");
+   blog_os::init();
+
+   
+//    x86_64::instructions::interrupts::int3();
+//trigger page fault
+// unsafe {
+//    *(0xdeadbeef as *mut u64) = 42;
+// }
+// fn stack_overflow(){
+//     stack_overflow();   
+// }
+// stack_overflow();
+    #[cfg(test)]
+    test_main();
+  println!("It did not crash!");
+    
+   blog_os::hlt_loop()
+       
+}
+

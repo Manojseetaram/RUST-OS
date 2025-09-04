@@ -1,4 +1,4 @@
-use core::fmt::{ self, Result, Write};
+use core::fmt::{self , Result, Write};
  
 use lazy_static::lazy_static;
 use spin::Mutex;
