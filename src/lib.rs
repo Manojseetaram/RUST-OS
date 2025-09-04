@@ -10,6 +10,7 @@ use core::panic::PanicInfo;
 pub mod vga_buffer;
 pub mod interrupts;
 pub mod serial;
+pub mod gdt;
 pub trait Testable {
     fn run(&self) -> ();
 }
@@ -49,7 +50,8 @@ pub extern "C" fn _start() -> ! {
     #[allow(clippy::empty_loop)]
     loop {}
 }
-pub fn init(){
+pub fn init() {
+    gdt::init();
     interrupts::init_idt();
 }
 
