@@ -51,9 +51,20 @@ pub extern "C" fn _start() -> ! {
     #[allow(clippy::empty_loop)]
     loop {}
 }
+// pub fn init() {
+//     gdt::init();
+//     interrupts::init_idt();
+// }
+// pub fn init() {
+//     gdt::init();
+//     interrupts::init_idt();
+//     unsafe { interrupts::PICS.lock().initialize() }; // new
+// }
 pub fn init() {
     gdt::init();
     interrupts::init_idt();
+    unsafe { interrupts::PICS.lock().initialize() };
+    x86_64::instructions::interrupts::enable();     // new
 }
 
 #[cfg(test)]
@@ -76,3 +87,4 @@ pub fn exit_qemu(exit_code: QemuExitCode) {
         port.write(exit_code as u32);
     }
 }
+

@@ -24,7 +24,10 @@ pub extern "C" fn _start() -> ! {
     #[cfg(test)]
     test_main();
 println!("It did not crash");
-    loop {}
+    loop {
+        use blog_os::print;
+        print!("-");        
+    }
 }
 
 /// This function is called on panic.

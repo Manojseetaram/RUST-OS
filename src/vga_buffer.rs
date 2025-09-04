@@ -1,5 +1,5 @@
-use core::fmt::{ Arguments, Result, Write};
-
+use core::fmt::{ self, Result, Write};
+ 
 use lazy_static::lazy_static;
 use spin::Mutex;
 use volatile::Volatile;
@@ -149,15 +149,21 @@ impl Write for Writer {
     () => ($crate:print!("\n"));
     ($($arg:tt)*)=> ($crate::print!("{}\n", format_args!($($arg)*)))
  }
- #[doc(hidden)]
- pub fn _print(args : Arguments){
+//  #[doc(hidden)]
+//  pub fn _print(args : Arguments){
+//     use core::fmt::Write;
+//     WRITER.lock().write_fmt(args).unwrap();
+
+//  }
+#[doc(hidden)]
+pub fn _print(args: fmt::Arguments) {
     use core::fmt::Write;
-    WRITER.lock().write_fmt(args).unwrap();
+    use x86_64::instructions::interrupts;   
 
- }
-
-
-
+    interrupts::without_interrupts(|| {     
+        WRITER.lock().write_fmt(args).unwrap();
+    });
+}
 #[test_case]
 fn test_println_simple() {
     println!("test_println_simple output");
@@ -172,10 +178,17 @@ fn test_println_many() {
 
 #[test_case]
 fn test_println_output() {
-    let s = "Some test string that fits on a single line";
-    println!("{}", s);
-    for (i, c) in s.chars().enumerate() {
-        let screen_char = WRITER.lock().buffer.chars[BUFFER_HEIGHT - 2][i].read();
-        assert_eq!(char::from(screen_char.ascii_character), c);
-    }
+    use core::fmt::Write;
+    use x86_64::instructions::interrupts;
+
+    
+      let s = "Some test string that fits on a single line";
+    interrupts::without_interrupts(|| {
+        let mut writer = WRITER.lock();
+        writeln!(writer, "\n{}", s).expect("writeln failed");
+        for (i, c) in s.chars().enumerate() {
+            let screen_char = writer.buffer.chars[BUFFER_HEIGHT - 2][i].read();
+            assert_eq!(char::from(screen_char.ascii_character), c);
+        }
+    });
 }
