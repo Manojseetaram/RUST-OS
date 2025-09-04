@@ -7,6 +7,8 @@
 
 use core::panic::PanicInfo;
 use blog_os::println;
+use bootloader::{BootInfo, entry_point};
+entry_point!(kernel_main);
 pub trait Testable {
     fn run(&self);
 }
@@ -25,7 +27,10 @@ fn panic(info: &PanicInfo) -> ! {
     blog_os::test_panic_handler(info)
 }
 #[unsafe(no_mangle)]
-pub extern "C" fn _start() -> ! {
+fn kernel_main(boot_info: &'static BootInfo) -> ! {
+     use blog_os::memory::active_level_4_table;
+    use x86_64::VirtAddr;
+
     println!("Rust is  Not a cult{}", "!");
    blog_os::init();
 
@@ -35,6 +40,15 @@ pub extern "C" fn _start() -> ! {
 
 //   unsafe { *ptr = 42; }
 // println!("write worked");
+//paging implmentaion
+ let phys_mem_offset = VirtAddr::new(boot_info.physical_memory_offset);
+    let l4_table = unsafe { active_level_4_table(phys_mem_offset) };
+
+    for (i, entry) in l4_table.iter().enumerate() {
+        if !entry.is_unused() {
+            println!("L4 Entry {}: {:?}", i, entry);
+        }
+    }
 
     use x86_64::registers::control::Cr3;
 

@@ -5,7 +5,7 @@ edition = "2018"
 
 
 [dependencies]
-bootloader = "0.9.32"
+bootloader = { version = "0.9.32", features = ["map_physical_memory"]}
 
 lazy_static = { version = "1.5.0", features = ["spin_no_std"] }
 spin = "0.5.2"
