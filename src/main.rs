@@ -12,6 +12,8 @@ use blog_os::println;
 pub extern "C" fn _start() -> ! {
     println!("Rust is  Not a cult{}", "!");
    blog_os::init();
+   blog_os::hlt_loop();  
+    println!("It did not crash!");
 //    x86_64::instructions::interrupts::int3();
 //trigger page fault
 // unsafe {
@@ -23,11 +25,13 @@ pub extern "C" fn _start() -> ! {
 // stack_overflow();
     #[cfg(test)]
     test_main();
-println!("It did not crash");
+ 
+    
     loop {
         use blog_os::print;
         print!("-");        
     }
+       
 }
 
 /// This function is called on panic.
@@ -35,7 +39,7 @@ println!("It did not crash");
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
-    loop {}
+    blog_os::hlt_loop();            // new
 }
 
 #[cfg(test)]
