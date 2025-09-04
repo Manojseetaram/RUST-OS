@@ -1,25 +1,18 @@
-// in src/memory.rs
+
 
 use x86_64::{
     structures::paging::{PageTable,OffsetPageTable , Page, PhysFrame, Mapper, Size4KiB, FrameAllocator},
     VirtAddr,
     PhysAddr
 };
-/// A FrameAllocator that always returns `None`.
+
 pub struct EmptyFrameAllocator;
 unsafe impl FrameAllocator<Size4KiB> for EmptyFrameAllocator {
     fn allocate_frame(&mut self) -> Option<PhysFrame> {
         None
     }
 }
-/// Returns a mutable reference to the active level 4 table.
-///
-/// This function is unsafe because the caller must guarantee that the
-/// complete physical memory is mapped to virtual memory at the passed
-/// `physical_memory_offset`. Also, this function must be only called once
-/// to avoid aliasing `&mut` references (which is undefined behavior).
-/// 
-/// 
+
 pub unsafe fn init(physical_memory_offset: VirtAddr) -> OffsetPageTable<'static> {
     unsafe {
         let level_4_table = active_level_4_table(physical_memory_offset);
